@@ -1,44 +1,13 @@
 ﻿using System;
-using System.Security.Cryptography.X509Certificates;
+using System.Collections.Generic;
 using System.Threading.Tasks;
 using Akka.Actor;
-using Akka.DI.AutoFac;
+using Akka.DI.Core;
 using AkkaStats.Core.Actors;
 using AkkaStats.Core.Messages;
-using Akka.DI.Core;
-using Autofac;
 
 namespace AkkaStats.Core
 {
-
-
-
-    public class ActorSystemFactory : IActorSystemFactory
-    {
-
-        private readonly ILifetimeScope lifetimeScope;
-
-        public ActorSystemFactory(ILifetimeScope lifetimeScope)
-        {
-            this.lifetimeScope = lifetimeScope;
-        }
-
-        public ActorSystem Create(string name)
-        {
-            ActorSystem statsActorSystem = ActorSystem.Create(name);
-            IDependencyResolver resolver = new AutoFacDependencyResolver(lifetimeScope, statsActorSystem);
-            return statsActorSystem;
-        }
-
-    }
-
-    public interface IStatsActor
-    {
-        //Task<string> HollaBack(string msg);
-        void AddPlayer(PlayerMessage msg);
-        Task<PlayerMessage> GetById(string id);
-    }
-
     public class StatsActorSystemService : IStatsActor
     {
   
@@ -47,15 +16,10 @@ namespace AkkaStats.Core
 
         public StatsActorSystemService(IActorSystemFactory actorSystemFactory)
         {
-            ActorSystem StatsActorSystem = actorSystemFactory.Create("ValidateStatsActor");
+            StatsActorSystem = actorSystemFactory.Create("ValidateStatsActor");
             //Props statsActorProps = Props.Create<ValidateStatsActor>();
             //statActorRef = StatsActorSystem.ActorOf(statsActorProps, "ValidateStatsActor");
             statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<ValidateStatsActor>(), "ValidateStatsActor");
-        }
-
-        public void AddPlayer(PlayerMessage msg)
-        {
-             statActorRef.Tell(msg);
         }
 
         public async Task<PlayerMessage> GetById(string id)
@@ -64,10 +28,17 @@ namespace AkkaStats.Core
             return result;
         }
 
-        //public async Task<string> HollaBack(string msg)
-        //{
-        //    var result = await statActorRef.Ask<string>("sup brotha man!");
-        //    return result;
-        //}
+        public async Task<IEnumerable<PlayerMessage>> GetAll()
+        {
+            var result = await statActorRef.Ask<IEnumerable<PlayerMessage>>("all");
+            return result;
+        }
+
+        public async Task AddPlayer(PlayerMessage msg)
+        {
+            msg.State = State.Create;
+            statActorRef.Tell(msg);
+        }
+
     }
 }

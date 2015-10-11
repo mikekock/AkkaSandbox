@@ -1,70 +1,64 @@
 ﻿using System;
-using System.Configuration;
 using System.Threading.Tasks;
 using System.Web.Http;
 using AkkaStats.Core;
 using AkkaStats.Core.Messages;
-using MongoDB.Driver;
 
 namespace AkkaStats.Api.Controllers
 {
     public class ValuesController : ApiController
     {
 
-        private IStatsActor _statsActor;
+        private readonly IStatsActor _statsActor;
 
         public ValuesController(IStatsActor statsActor)
         {
             _statsActor = statsActor;
         }
 
-        // GET api/values
+        /// <summary>
+        /// Get An Records Array
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
-        [Route("api/stats/add/{name}")]
+        [Route("api/stats", Name = "GetAll")]
+        public async Task<IHttpActionResult> GetAll()
+        {
+            var results = await _statsActor.GetAll();
+            if (results == null) return NotFound();
+            // Used to make a simple link from the json object to the GetById Route
+            foreach (var result in results)
+            {
+                result.Url = String.Format("{0}{1}", "http://localhost:49781", Url.Route("GetById", new { id = result.Id }));
+            }
+            return Ok(results);
+        }
+
+        /// <summary>
+        /// Add an entity and get the record back
+        /// </summary>
+        [HttpGet]
+        [Route("api/stats/add/{name}", Name="Add")]
         public async Task<IHttpActionResult> Add(string name)
         {
             var newPlayer = new PlayerMessage() { Id = Guid.NewGuid(), Name = name };
-            _statsActor.AddPlayer(newPlayer);
+            await _statsActor.AddPlayer(newPlayer);
 
             return Ok(newPlayer);
         }
 
+        /// <summary>
+        /// Get an entity by its identity
+        /// </summary>
         [HttpGet]
-        [Route("api/stats/{id}")]
-        public async Task<IHttpActionResult> Get(string id)
-        {
-          
+        [Route("api/stats/{id}", Name = "GetById")]
+        public async Task<IHttpActionResult> GetById(string id)
+        {    
             var result = await _statsActor.GetById(id);
-
             return Ok(result);
         }
 
 
-        [HttpGet]
-        [Route("api/stat")]
-        public async Task<IHttpActionResult> GetManyMongo()
-        {
-            IMongoClient mongoClient = new MongoClient(ConfigurationManager.AppSettings.Get("mongoConnection"));
-            IMongoDatabase mongoDatabase = mongoClient.GetDatabase(ConfigurationManager.AppSettings.Get("mongoDb"));
-            IMongoCollection<PlayerMessage> mongoCollection = mongoDatabase.GetCollection<PlayerMessage>(typeof(PlayerMessage).Name);
-    
-            var result = await( await mongoCollection.FindAsync(_ => true)).ToListAsync();
-
-            return Ok(result);
-        }
-
-        [HttpGet]
-        [Route("api/stat/{id}")]
-        public async Task<IHttpActionResult> GetOneMongo(string id)
-        {
-            IMongoClient mongoClient = new MongoClient(ConfigurationManager.AppSettings.Get("mongoConnection"));
-            IMongoDatabase mongoDatabase = mongoClient.GetDatabase(ConfigurationManager.AppSettings.Get("mongoDb"));
-            IMongoCollection<PlayerMessage> mongoCollection = mongoDatabase.GetCollection<PlayerMessage>(typeof(PlayerMessage).Name);
-            
-            var result = await mongoCollection.Find(x => x.Id == Guid.Parse(id)).SingleOrDefaultAsync();
-
-            return Ok(result);
-        }
 
     }
 }

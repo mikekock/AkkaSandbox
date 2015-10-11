@@ -33,6 +33,7 @@ namespace AkkaStats.Api
             var builder = new ContainerBuilder();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
+
             builder.RegisterType<StatsActorSystemService>().As<IStatsActor>().InstancePerRequest();
             builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().InstancePerRequest();
             builder.RegisterType<ValidateStatsActor>();
