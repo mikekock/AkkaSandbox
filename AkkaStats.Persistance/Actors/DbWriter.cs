@@ -30,8 +30,9 @@ namespace AkkaStats.Persistance.Actors
 
         private void DeleteOne(DbRequestMessage requestMessage)
         {
-            Debug.WriteLine("DeleteOne using the DbWriter");
-            _mongoCollection.DeleteOneAsync(x => x.Id.Equals(requestMessage.Id));
+            Debug.WriteLine("DeleteOne using the DbWriter " + requestMessage.Id);
+            var filter = Builders<T>.Filter.Eq("_id", requestMessage.Id);
+            _mongoCollection.DeleteOneAsync(filter);
         }
 
         private void DeleteMany(DbRequestMessage requestMessage)

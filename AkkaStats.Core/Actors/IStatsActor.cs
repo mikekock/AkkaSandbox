@@ -7,10 +7,22 @@ namespace AkkaStats.Core.Actors
     public interface IStatsActor
     {
         //Task<string> HollaBack(string msg);
-        Task AddPlayer(PlayerMessage msg);
-        Task<PlayerMessage> GetById(string id);
-        Task<List<PlayerMessage>> GetAll();
-        Task DeleteAllPlayers();
-        Task BulkPlayers(List<PlayerMessage> list);
+        Task AddPitcher(PitcherMessage msg);
+        Task AddHitter(HitterMessage msg);
+
+        Task<PitcherMessage> GetByPitcherId(string id);
+        Task<HitterMessage> GetByHitterId(string id);
+
+        Task<List<PitcherMessage>> GetAllPitchers();
+        Task<List<HitterMessage>> GetAllHitters();
+
+        Task DeleteAllPitchers();
+        Task DeleteAllHitters();
+
+        Task DeletePitcherById(string id);
+        Task DeleteHitterById(string id);
+
+        Task BulkHitters(List<HitterMessage> list);
+        Task BulkPitchers(List<PitcherMessage> list);
     }
 }

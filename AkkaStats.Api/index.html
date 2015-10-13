@@ -1,22 +1,88 @@
 ﻿<!DOCTYPE html>
-<html lang="en">
+<html lang="en" ng-app="akkaApp">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title></title>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootswatch/3.3.5/flatly/bootstrap.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.css" rel="stylesheet" />
+    <link href="styles.css" rel="stylesheet" />
 </head>
 <body>
 
     <div class="container">
-        <div class="starter-template">
-            <h1>Baseball Player Stats</h1>
-            <p>Pitchers and Hitters</p>
+
+        <toaster-container></toaster-container>
+        <div class="row" ng-controller="homeController as vm">
+            <div class="col-md-12">
+                <h2>Baseball Player Stats</h2>
+                <hr />
+            </div>
+            <div class="col-md-6">
+                <p class="hdr">Hitters</p>
+
+                <ul ng-repeat="hitter in vm.hitters">
+                    <li>
+                        {{hitter.name}} {{hitter.hrs}}
+                        <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deleteHitter(hitter.id)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+
+                    </li>
+                </ul>
+                <div class="form-container">
+                    <form name="vm.hitterForm" ng-submit="vm.addHitter()">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.hitter.name" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="hrs">Homeruns</label>
+                            <input type="number" class="form-control input-sm" id="hrs" name="hrs" ng-model="vm.hitter.hrs" placeholder="Hrs">
+                        </div>
+                        <button type="submit" class="btn btn-default btn-sm">Add</button>
+                    </form>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+                <p class="hdr">Pitchers</p>
+
+                <ul ng-repeat="pitcher in vm.pitchers">
+                    <li>
+                        {{pitcher.name}} {{pitcher.wins}}
+                        <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deletePitcher(pitcher.id)">
+                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                        </button>
+                    </li>
+                </ul>
+                <div class="form-container">
+                    <form name="vm.pitcherForm" ng-submit="vm.addPitcher()">
+                        <div class="form-group">
+                            <label for="name">Name</label>
+                            <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.pitcher.name" placeholder="Name">
+                        </div>
+                        <div class="form-group">
+                            <label for="wins">Wins</label>
+                            <input type="number" class="form-control input-sm" id="wins" name="wins" ng-model="vm.pitcher.wins" placeholder="Wins">
+                        </div>
+                        <button type="submit" class="btn btn-default btn-sm">Add</button>
+                    </form>
+                </div>
+            </div>
+
         </div>
+
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-animate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.js"></script>
+    <script src="app.js"></script>
+    <script src="httpClient.js"></script>
 </body>
 </html>

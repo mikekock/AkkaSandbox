@@ -190,7 +190,11 @@
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="app.js" />
     <Content Include="favicon.ico" />
+    <Content Include="httpClient.js" />
+    <Content Include="index.html" />
+    <Content Include="styles.css" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>

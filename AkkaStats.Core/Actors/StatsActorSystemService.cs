@@ -22,24 +22,71 @@ namespace AkkaStats.Core.Actors
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
         }
 
-        public async Task<PlayerMessage> GetById(string id)
+        public async Task AddPitcher(PitcherMessage msg)
         {
-            var result = await statActorRef.Ask<PlayerMessage>(Guid.Parse(id));
+            msg.State = State.Create;
+            statActorRef.Tell(msg);
+        }
+
+        public async Task AddHitter(HitterMessage msg)
+        {
+            msg.State = State.Create;
+            statActorRef.Tell(msg);
+        }
+
+        public async Task<PitcherMessage> GetByPitcherId(string id)
+        {
+            var request = PlayerQuery.Create("get_pitcher", Guid.Parse(id));
+            var result = await statActorRef.Ask<PitcherMessage>(request);
             return result;
         }
 
-        public async Task<List<PlayerMessage>> GetAll()
+        public async Task<HitterMessage> GetByHitterId(string id)
         {
-            var result = await statActorRef.Ask<List<PlayerMessage>>("all");
+            var request = PlayerQuery.Create("get_hitter", Guid.Parse(id));
+            var result = await statActorRef.Ask<HitterMessage>(request);
             return result;
         }
 
-        public async Task DeleteAllPlayers()
+        public async Task<List<PitcherMessage>> GetAllPitchers()
         {
-            statActorRef.Tell("delete");
+            var request = PlayerQuery.Create("all_pitchers");
+            var result = await statActorRef.Ask<List<PitcherMessage>>(request);
+            return result;
         }
 
-        public async Task BulkPlayers(List<PlayerMessage> list)
+        public async Task<List<HitterMessage>> GetAllHitters()
+        {
+            var request = PlayerQuery.Create("all_hitters");
+            var result = await statActorRef.Ask<List<HitterMessage>>(request);
+            return result;
+        }
+
+        public async Task DeleteAllPitchers()
+        {
+            var request = PlayerQuery.Create("delete_pitchers");
+            statActorRef.Tell(request);
+        }
+
+        public async Task DeleteAllHitters()
+        {
+            var request = PlayerQuery.Create("delete_hitters");
+            statActorRef.Tell(request);
+        }
+
+        public async Task DeletePitcherById(string id)
+        {
+            var request = PlayerQuery.Create("delete_pitcher", Guid.Parse(id));
+            statActorRef.Tell(request);
+        }
+
+        public async Task DeleteHitterById(string id)
+        {
+            var request = PlayerQuery.Create("delete_hitter", Guid.Parse(id));
+            statActorRef.Tell(request);
+        }
+
+        public async Task BulkHitters(List<HitterMessage> list)
         {
             foreach (var item in list)
             {
@@ -48,11 +95,13 @@ namespace AkkaStats.Core.Actors
             }
         }
 
-        public async Task AddPlayer(PlayerMessage msg)
+        public async Task BulkPitchers(List<PitcherMessage> list)
         {
-            msg.State = State.Create;
-            statActorRef.Tell(msg);
+            foreach (var item in list)
+            {
+                item.State = State.Create;
+                statActorRef.Tell(item);
+            }
         }
-
     }
 }
