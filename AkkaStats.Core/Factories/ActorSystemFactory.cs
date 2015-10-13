@@ -3,7 +3,7 @@ using Akka.DI.AutoFac;
 using Akka.DI.Core;
 using Autofac;
 
-namespace AkkaStats.Core
+namespace AkkaStats.Core.Factories
 {
     public class ActorSystemFactory : IActorSystemFactory
     {

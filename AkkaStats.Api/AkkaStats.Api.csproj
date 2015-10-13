@@ -204,6 +204,10 @@
       <Project>{606bf936-46e3-4fcb-aca2-0f3f90e28aef}</Project>
       <Name>AkkaStats.Core</Name>
     </ProjectReference>
+    <ProjectReference Include="..\AkkaStats.Persistance\AkkaStats.Persistance.csproj">
+      <Project>{553F49D7-69C9-4680-A6DF-778DD279B47D}</Project>
+      <Name>AkkaStats.Persistance</Name>
+    </ProjectReference>
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />

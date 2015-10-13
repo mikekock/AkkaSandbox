@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using System.Web.Http;
-using AkkaStats.Core;
+using AkkaStats.Core.Actors;
 using AkkaStats.Core.Messages;
 
 namespace AkkaStats.Api.Controllers

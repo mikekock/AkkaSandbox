@@ -73,16 +73,23 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ActorSystemFactory.cs" />
+    <Compile Include="Factories\ActorSystemFactory.cs" />
     <Compile Include="Actors\StatsCoordinatorActor.cs" />
-    <Compile Include="IActorSystemFactory.cs" />
-    <Compile Include="IStatsActor.cs" />
+    <Compile Include="Factories\IActorSystemFactory.cs" />
+    <Compile Include="Actors\IStatsActor.cs" />
     <Compile Include="Messages\GetLatestStatsMessage.cs" />
-    <Compile Include="StatsActorSystemService.cs" />
+    <Compile Include="Messages\PlayerMessage.cs" />
+    <Compile Include="Actors\StatsActorSystemService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\AkkaStats.Persistance\AkkaStats.Persistance.csproj">
+      <Project>{553F49D7-69C9-4680-A6DF-778DD279B47D}</Project>
+      <Name>AkkaStats.Persistance</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

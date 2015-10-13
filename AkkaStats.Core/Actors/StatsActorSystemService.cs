@@ -4,10 +4,10 @@ using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.DI.Core;
 using Akka.Routing;
-using AkkaStats.Core.Actors;
+using AkkaStats.Core.Factories;
 using AkkaStats.Core.Messages;
 
-namespace AkkaStats.Core
+namespace AkkaStats.Core.Actors
 {
     public class StatsActorSystemService : IStatsActor
     {
@@ -18,10 +18,8 @@ namespace AkkaStats.Core
         public StatsActorSystemService(IActorSystemFactory actorSystemFactory)
         {
             StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
-            //Props statsActorProps = Props.Create<StatsCoordinatorActor>();
-            //statActorRef = StatsActorSystem.ActorOf(statsActorProps, "StatsCoordinatorActor");
             statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
-                .WithRouter(new RoundRobinPool(1)), "StatsCoordinatorActor");
+                .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
         }
 
         public async Task<PlayerMessage> GetById(string id)

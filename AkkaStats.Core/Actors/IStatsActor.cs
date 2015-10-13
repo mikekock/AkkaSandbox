@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using AkkaStats.Core.Messages;
 
-namespace AkkaStats.Core
+namespace AkkaStats.Core.Actors
 {
     public interface IStatsActor
     {

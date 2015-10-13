@@ -1,6 +1,6 @@
 ﻿using Akka.Actor;
 
-namespace AkkaStats.Core
+namespace AkkaStats.Core.Factories
 {
     public interface IActorSystemFactory
     {

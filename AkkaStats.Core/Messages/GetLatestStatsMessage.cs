@@ -1,7 +1,4 @@
-﻿using System;
-using MongoDB.Bson.Serialization.Attributes;
-
-namespace AkkaStats.Core.Messages
+﻿namespace AkkaStats.Core.Messages
 {
     public enum State
     {
@@ -9,20 +6,6 @@ namespace AkkaStats.Core.Messages
         Read = 0,
         Update = 2,
         Delete = 3
-    }
-
-    public interface IMongoEntity
-    {
-        Guid Id { get; }
-    }
-
-    public class PlayerMessage : IMongoEntity
-    {
-        [BsonId]
-        public Guid Id { get; set; }
-        public string Name { get; set; }
-        public string Url { get; set; }
-        public State State { get; set; }
     }
 
     public class GetLatestStatsMessage

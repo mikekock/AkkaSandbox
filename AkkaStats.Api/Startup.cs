@@ -1,19 +1,16 @@
-﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
+﻿using System.Reflection;
 using System.Web.Http;
-using Akka.Actor;
-using Akka.DI.AutoFac;
-using Akka.DI.Core;
-using AkkaStats.Core;
+using AkkaStats.Api;
 using AkkaStats.Core.Actors;
+using AkkaStats.Core.Factories;
 using AkkaStats.Core.Messages;
+using AkkaStats.Persistance.Actors;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
 
-[assembly: OwinStartup(typeof(AkkaStats.Api.Startup))]
+[assembly: OwinStartup(typeof(Startup))]
 
 namespace AkkaStats.Api
 {
