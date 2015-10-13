@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.DI.Core;
+using Akka.Routing;
 using AkkaStats.Core.Actors;
 using AkkaStats.Core.Messages;
 
@@ -16,10 +17,11 @@ namespace AkkaStats.Core
 
         public StatsActorSystemService(IActorSystemFactory actorSystemFactory)
         {
-            StatsActorSystem = actorSystemFactory.Create("ValidateStatsActor");
-            //Props statsActorProps = Props.Create<ValidateStatsActor>();
-            //statActorRef = StatsActorSystem.ActorOf(statsActorProps, "ValidateStatsActor");
-            statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<ValidateStatsActor>(), "ValidateStatsActor");
+            StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
+            //Props statsActorProps = Props.Create<StatsCoordinatorActor>();
+            //statActorRef = StatsActorSystem.ActorOf(statsActorProps, "StatsCoordinatorActor");
+            statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
+                .WithRouter(new RoundRobinPool(1)), "StatsCoordinatorActor");
         }
 
         public async Task<PlayerMessage> GetById(string id)
@@ -28,10 +30,24 @@ namespace AkkaStats.Core
             return result;
         }
 
-        public async Task<IEnumerable<PlayerMessage>> GetAll()
+        public async Task<List<PlayerMessage>> GetAll()
         {
-            var result = await statActorRef.Ask<IEnumerable<PlayerMessage>>("all");
+            var result = await statActorRef.Ask<List<PlayerMessage>>("all");
             return result;
+        }
+
+        public async Task DeleteAllPlayers()
+        {
+            statActorRef.Tell("delete");
+        }
+
+        public async Task BulkPlayers(List<PlayerMessage> list)
+        {
+            foreach (var item in list)
+            {
+                item.State = State.Create;
+                statActorRef.Tell(item);
+            }
         }
 
         public async Task AddPlayer(PlayerMessage msg)

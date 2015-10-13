@@ -7,6 +7,7 @@ using Akka.DI.AutoFac;
 using Akka.DI.Core;
 using AkkaStats.Core;
 using AkkaStats.Core.Actors;
+using AkkaStats.Core.Messages;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
@@ -36,7 +37,9 @@ namespace AkkaStats.Api
 
             builder.RegisterType<StatsActorSystemService>().As<IStatsActor>().InstancePerRequest();
             builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().InstancePerRequest();
-            builder.RegisterType<ValidateStatsActor>();
+            builder.RegisterType<StatsCoordinatorActor>();
+            builder.RegisterType<DbReader<PlayerMessage>>();
+            builder.RegisterType<DbWriter<PlayerMessage>>();
             var container = builder.Build();
             return container;
         }

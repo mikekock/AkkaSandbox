@@ -11,7 +11,12 @@ namespace AkkaStats.Core.Messages
         Delete = 3
     }
 
-    public class PlayerMessage
+    public interface IMongoEntity
+    {
+        Guid Id { get; }
+    }
+
+    public class PlayerMessage : IMongoEntity
     {
         [BsonId]
         public Guid Id { get; set; }

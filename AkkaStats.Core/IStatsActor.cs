@@ -9,6 +9,8 @@ namespace AkkaStats.Core
         //Task<string> HollaBack(string msg);
         Task AddPlayer(PlayerMessage msg);
         Task<PlayerMessage> GetById(string id);
-        Task<IEnumerable<PlayerMessage>> GetAll();
+        Task<List<PlayerMessage>> GetAll();
+        Task DeleteAllPlayers();
+        Task BulkPlayers(List<PlayerMessage> list);
     }
 }

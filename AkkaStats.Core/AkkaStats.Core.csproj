@@ -74,7 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ActorSystemFactory.cs" />
-    <Compile Include="Actors\ValidateStatsActor.cs" />
+    <Compile Include="Actors\StatsCoordinatorActor.cs" />
     <Compile Include="IActorSystemFactory.cs" />
     <Compile Include="IStatsActor.cs" />
     <Compile Include="Messages\GetLatestStatsMessage.cs" />
