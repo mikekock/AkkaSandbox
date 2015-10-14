@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using Akka.Actor;
 using Akka.DI.Core;
@@ -52,14 +53,14 @@ namespace AkkaStats.Core.Actors
         {
             var request = PlayerQuery.Create("all_pitchers");
             var result = await statActorRef.Ask<List<PitcherMessage>>(request);
-            return result;
+            return result.OrderByDescending(x => x.Wins).ToList();
         }
 
         public async Task<List<HitterMessage>> GetAllHitters()
         {
             var request = PlayerQuery.Create("all_hitters");
             var result = await statActorRef.Ask<List<HitterMessage>>(request);
-            return result;
+            return result.OrderByDescending(x => x.Hrs).ToList();
         }
 
         public async Task DeleteAllPitchers()

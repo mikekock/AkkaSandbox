@@ -1,6 +1,7 @@
 ﻿using System.Reflection;
 using System.Web.Http;
 using AkkaStats.Api;
+using AkkaStats.Api.Hubs;
 using AkkaStats.Core.Actors;
 using AkkaStats.Core.Factories;
 using AkkaStats.Core.Messages;
@@ -16,14 +17,17 @@ namespace AkkaStats.Api
 {
     public class Startup
     {
+        private BackgroundTicker _backgroundTicker;
+
         public void Configuration(IAppBuilder app)
         {
+            _backgroundTicker = new BackgroundTicker();
             var config = new HttpConfiguration();
             var container = CreateKernel();
             app.UseAutofacMiddleware(container).UseAutofacWebApi(config);
+            app.MapSignalR();
             WebApiConfig.Register(config);
             app.UseWebApi(config);
-
         }
 
         public static IContainer CreateKernel()

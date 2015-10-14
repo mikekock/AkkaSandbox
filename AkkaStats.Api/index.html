@@ -17,7 +17,10 @@
         <div class="row" ng-controller="homeController as vm">
             <div class="col-md-12">
                 <h2>Baseball Player Stats</h2>
-                <hr />
+                <hr/>
+            </div>
+            <div class="col-md-12">
+                Message: {{ vm.messages}}
             </div>
             <div class="col-md-6">
                 <p class="hdr">Hitters</p>
@@ -77,12 +80,14 @@
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-animate.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.js"></script>   
     <script src="app.js"></script>
     <script src="httpClient.js"></script>
+    <script src="signalr/hubs"></script>
 </body>
 </html>
