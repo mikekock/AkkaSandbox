@@ -9,13 +9,14 @@
 
     disableScope.$inject = ['$compileProvider'];
 
-    var homeController = function (httpRepository, toaster, $timeout, realTimeService, $scope) {
+    var homeController = function (httpRepository, toaster, $timeout, realTimeService, $scope, $uibModal, $log) {
         var vm = this;
 
- 
+        vm.messages = [];
+
         $scope.$on('realTimeService-event-fired', function (evt, data) {
             console.log(data);
-            vm.messages = data.value;
+            vm.messages.unshift(data.value);
             $scope.$apply();
         });
 
@@ -38,6 +39,10 @@
         loadHitters();
         loadPitchers();
 
+        vm.removeLog = function () {
+            vm.messages = [];
+        };
+
         vm.addHitter = function () {
 
             httpRepository.postData('api/stats/hitter', vm.hitter).then(function (data) {
@@ -59,7 +64,7 @@
         vm.addPitcher = function () {
 
             httpRepository.postData('api/stats/pitcher', vm.pitcher).then(function (data) {
-               
+
 
                 $timeout(function () { loadPitchers(); }, 1000);
 
@@ -77,25 +82,94 @@
             });
         };
 
+        vm.openHitter = function (id) {
+
+            httpRepository.getData('api/stats/hitter/' + id).then(function (data) {
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'myModalContent.html',
+                    controller: 'modalController',
+                    resolve: {
+                        player: function () {
+                            return data;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function () {
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+
+            });
+            console.log(id);
+        };
+
+        vm.openPitcher = function (id) {
+
+            httpRepository.getData('api/stats/pitcher/' + id).then(function (data) {
+
+                var modalInstance = $uibModal.open({
+                    templateUrl: 'myModalContent.html',
+                    controller: 'modalController',
+                    resolve: {
+                        player: function () {
+                            return data;
+                        }
+                    }
+                });
+
+                modalInstance.result.then(function () {
+                }, function () {
+                    $log.info('Modal dismissed at: ' + new Date());
+                });
+
+            });
+
+            console.log(id);
+        };
+
     };
 
-    homeController.$inject = ['httpRepository', 'toaster', '$timeout', 'realTimeService', '$scope'];
+    homeController.$inject = ['httpRepository', 'toaster', '$timeout', 'realTimeService', '$scope', '$uibModal', '$log'];
 
-    angular.module('akkaApp', ['ngAnimate', 'toaster', 'realTimeService'])
+
+    var modalController = function ($scope, $modalInstance, player) {
+
+
+
+            console.log('------');
+            console.log(player);
+            console.log('------');
+  
+
+
+        $scope.playerInfo = player;
+
+
+        $scope.cancel = function () {
+            $modalInstance.dismiss('cancel');
+        };
+    };
+
+    modalController.$inject = ['$scope', '$modalInstance', 'player'];
+
+    angular.module('akkaApp', ['ngAnimate', 'toaster', 'realTimeService', 'ui.bootstrap'])
         .config(disableScope)
-        .controller('homeController', homeController);
+        .controller('homeController', homeController)
+        .controller('modalController', modalController);
 
     angular.module('realTimeService', []).factory('realTimeService', ['$rootScope', function ($rootScope) {
 
         var hub = $.connection.statsHub;
-        hub.client.broadcastMessage = function(date, data) {
+        hub.client.broadcastMessage = function (date, data) {
             $rootScope.$broadcast('realTimeService-event-fired', {
                 'date': date,
                 'value': data
             });
         };
 
-        $.connection.hub.start().done().fail(function(data) {
+        $.connection.hub.start().done().fail(function (data) {
             alert(data);
         });
 

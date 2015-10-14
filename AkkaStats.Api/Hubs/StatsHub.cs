@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Web.Hosting;
+using AkkaStats.Persistance.Interfaces;
 using Microsoft.AspNet.SignalR;
 
 namespace AkkaStats.Api.Hubs
@@ -12,18 +13,23 @@ namespace AkkaStats.Api.Hubs
         private IHubContext hub;
         private int valueOut = 0;
         private Random randomValue;
+        private IHubMessageService _hubMessageService;
 
-        public BackgroundTicker()
+        public BackgroundTicker(IHubMessageService hubMessageService)
         {
+            _hubMessageService = hubMessageService;
             HostingEnvironment.RegisterObject(this);
             hub = GlobalHost.ConnectionManager.GetHubContext<StatsHub>();
-            taskTimer = new Timer(OnTimerElasped, null, TimeSpan.FromSeconds(5), TimeSpan.FromSeconds(5));
+            taskTimer = new Timer(OnTimerElasped, null, TimeSpan.FromSeconds(2), TimeSpan.FromSeconds(2));
         }
 
         private void OnTimerElasped(object sender)
         {
-            hub.Clients.All.broadcastMessage(DateTime.UtcNow.ToString(), valueOut);
-            valueOut++;
+            foreach (var message in _hubMessageService.SavedMessages())
+            {
+                hub.Clients.All.broadcastMessage(message.TimeStamp, message.Message);
+            }
+            _hubMessageService.Clear();
         }
 
         public void Stop(bool immediate)
@@ -35,8 +41,6 @@ namespace AkkaStats.Api.Hubs
 
     public class StatsHub : Hub
     {
-      
-
-
     }
+
 }

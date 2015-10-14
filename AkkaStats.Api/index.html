@@ -11,81 +11,141 @@
 </head>
 <body>
 
+    <div class="container-fluid site-bg">
+        <div class="container">
+            Baseball Player Stats
+        </div>
+
+    </div>
     <div class="container">
-
+        <br />
         <toaster-container></toaster-container>
+
         <div class="row" ng-controller="homeController as vm">
-            <div class="col-md-12">
-                <h2>Baseball Player Stats</h2>
-                <hr/>
-            </div>
-            <div class="col-md-12">
-                Message: {{ vm.messages}}
-            </div>
-            <div class="col-md-6">
-                <p class="hdr">Hitters</p>
 
-                <ul ng-repeat="hitter in vm.hitters">
-                    <li>
-                        {{hitter.name}} {{hitter.hrs}}
-                        <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deleteHitter(hitter.id)">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </button>
+            <div class="col-md-4">
 
-                    </li>
-                </ul>
-                <div class="form-container">
-                    <form name="vm.hitterForm" ng-submit="vm.addHitter()">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.hitter.name" placeholder="Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="hrs">Homeruns</label>
-                            <input type="number" class="form-control input-sm" id="hrs" name="hrs" ng-model="vm.hitter.hrs" placeholder="Hrs">
-                        </div>
-                        <button type="submit" class="btn btn-default btn-sm">Add</button>
-                    </form>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Hitters</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul ng-repeat="hitter in vm.hitters">
+                            <li>
+
+                                <a href="javascript:;" ng-click="vm.openHitter(hitter.id)" class="btn btn-link btn-xs">{{hitter.name}} {{hitter.hrs}}</a>
+                                <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deleteHitter(hitter.id)">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add Pitchers</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form name="vm.hitterForm" ng-submit="vm.addHitter()">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.hitter.name" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="hrs">Homeruns</label>
+                                <input type="number" class="form-control input-sm" id="hrs" name="hrs" ng-model="vm.hitter.hrs" placeholder="Hrs">
+                            </div>
+                            <button type="submit" class="btn btn-default btn-sm">Add</button>
+                        </form>
+                    </div>
                 </div>
 
             </div>
-            <div class="col-md-6">
-                <p class="hdr">Pitchers</p>
+            <div class="col-md-4">
 
-                <ul ng-repeat="pitcher in vm.pitchers">
-                    <li>
-                        {{pitcher.name}} {{pitcher.wins}}
-                        <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deletePitcher(pitcher.id)">
-                            <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
-                        </button>
-                    </li>
-                </ul>
-                <div class="form-container">
-                    <form name="vm.pitcherForm" ng-submit="vm.addPitcher()">
-                        <div class="form-group">
-                            <label for="name">Name</label>
-                            <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.pitcher.name" placeholder="Name">
-                        </div>
-                        <div class="form-group">
-                            <label for="wins">Wins</label>
-                            <input type="number" class="form-control input-sm" id="wins" name="wins" ng-model="vm.pitcher.wins" placeholder="Wins">
-                        </div>
-                        <button type="submit" class="btn btn-default btn-sm">Add</button>
-                    </form>
+                <div class="panel panel-primary">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Pitchers</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul ng-repeat="pitcher in vm.pitchers">
+                            <li>
+                                <a href="javascript:;" ng-click="vm.openPitcher(pitcher.id)" class="btn btn-link btn-xs">{{pitcher.name}} {{pitcher.wins}}</a>
+                                <button class="btn btn-xs btn-danger pull-right" ng-click="vm.deletePitcher(pitcher.id)">
+                                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>
+                                </button>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="panel panel-success">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Add Pitchers</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form name="vm.pitcherForm" ng-submit="vm.addPitcher()">
+                            <div class="form-group">
+                                <label for="name">Name</label>
+                                <input type="text" class="form-control input-sm" id="name" name="name" ng-model="vm.pitcher.name" placeholder="Name">
+                            </div>
+                            <div class="form-group">
+                                <label for="wins">Wins</label>
+                                <input type="number" class="form-control input-sm" id="wins" name="wins" ng-model="vm.pitcher.wins" placeholder="Wins">
+                            </div>
+                            <button type="submit" class="btn btn-default btn-sm">Add</button>
+                        </form>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-4">
+                <div class="panel panel-info">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Events</h3>
+                    </div>
+                    <div class="panel-body">
+                        <ul ng-repeat="message in vm.messages track by $index">
+                            <li>{{message}}</li>
+                        </ul>
+                    </div>
+                    <div class="panel-body">
+                        <button class="btn btn-danger btn-block btn-xs" ng-click="vm.removeLog()"> CLEAR LOG</button>
+                    </div>
                 </div>
             </div>
+
+            <script type="text/ng-template" id="myModalContent.html">
+                <div class="modal-header">
+                    <h3 class="modal-title">Player View</h3>
+                </div>
+                <div class="modal-body">
+                    <pre>
+                        {{playerInfo | json}}
+                    </pre>
+
+                </div>
+                <div class="modal-footer">
+                    <button class="btn btn-warning" type="button" ng-click="cancel()">Close</button>
+                </div>
+            </script>
 
         </div>
 
     </div>
 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-    <script src="Scripts/jquery.signalR-2.2.0.min.js"></script>
+    <script src="http://ajax.aspnetcdn.com/ajax/signalr/jquery.signalr-2.2.0.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular-animate.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular-ui-bootstrap/0.14.2/ui-bootstrap-tpls.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/2.1.2/toastr.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.js"></script>   
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angularjs-toaster/0.4.15/toaster.min.js"></script>
     <script src="app.js"></script>
     <script src="httpClient.js"></script>
     <script src="signalr/hubs"></script>

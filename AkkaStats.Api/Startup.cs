@@ -6,6 +6,7 @@ using AkkaStats.Core.Actors;
 using AkkaStats.Core.Factories;
 using AkkaStats.Core.Messages;
 using AkkaStats.Persistance.Actors;
+using AkkaStats.Persistance.Interfaces;
 using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
@@ -21,9 +22,12 @@ namespace AkkaStats.Api
 
         public void Configuration(IAppBuilder app)
         {
-            _backgroundTicker = new BackgroundTicker();
+            
             var config = new HttpConfiguration();
             var container = CreateKernel();
+
+            _backgroundTicker = new BackgroundTicker(container.Resolve<IHubMessageService>());
+
             app.UseAutofacMiddleware(container).UseAutofacWebApi(config);
             app.MapSignalR();
             WebApiConfig.Register(config);
@@ -38,6 +42,7 @@ namespace AkkaStats.Api
 
             builder.RegisterType<StatsActorSystemService>().As<IStatsActor>().InstancePerRequest();
             builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().InstancePerRequest();
+            builder.RegisterType<HubMessageService>().As<IHubMessageService>().SingleInstance();
             builder.RegisterType<StatsCoordinatorActor>();
             builder.RegisterType<DbReader<PitcherMessage>>();
             builder.RegisterType<DbWriter<PitcherMessage>>();

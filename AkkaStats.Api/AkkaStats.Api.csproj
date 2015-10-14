@@ -204,6 +204,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="app.js" />
+    <Content Include="baseball.jpg" />
     <Content Include="favicon.ico" />
     <Content Include="httpClient.js" />
     <Content Include="index.html" />

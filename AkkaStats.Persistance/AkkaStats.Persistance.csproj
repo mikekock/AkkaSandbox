@@ -74,6 +74,7 @@
   <ItemGroup>
     <Compile Include="Actors\DbReader.cs" />
     <Compile Include="Actors\DbWriter.cs" />
+    <Compile Include="Messages\HubMessage.cs" />
     <Compile Include="Interfaces\IMongoEntity.cs" />
     <Compile Include="Messages\DbRequestMessage.cs" />
     <Compile Include="Messages\DbRequestType.cs" />
