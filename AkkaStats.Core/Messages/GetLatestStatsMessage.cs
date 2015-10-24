@@ -1,6 +1,6 @@
 ﻿namespace AkkaStats.Core.Messages
 {
-    public enum State
+    public enum CRUDState
     {
         Create = 1,
         Read = 0,

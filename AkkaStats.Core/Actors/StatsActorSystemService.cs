@@ -15,24 +15,29 @@ namespace AkkaStats.Core.Actors
   
         private readonly ActorSystem StatsActorSystem;
         private readonly IActorRef statActorRef;
+        private readonly IActorRef statCommandActorRef;
 
         public StatsActorSystemService(IActorSystemFactory actorSystemFactory)
         {
             StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
             statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
+
+            statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");
         }
 
         public async Task AddPitcher(PitcherMessage msg)
         {
-            msg.State = State.Create;
+            msg.State = CRUDState.Create;
             statActorRef.Tell(msg);
         }
 
         public async Task AddHitter(HitterMessage msg)
         {
-            msg.State = State.Create;
-            statActorRef.Tell(msg);
+            msg.State = CRUDState.Create;
+            //statActorRef.Tell(msg);
+
+            statCommandActorRef.Tell(msg);
         }
 
         public async Task<PitcherMessage> GetByPitcherId(string id)
@@ -91,7 +96,7 @@ namespace AkkaStats.Core.Actors
         {
             foreach (var item in list)
             {
-                item.State = State.Create;
+                item.State = CRUDState.Create;
                 statActorRef.Tell(item);
             }
         }
@@ -100,7 +105,7 @@ namespace AkkaStats.Core.Actors
         {
             foreach (var item in list)
             {
-                item.State = State.Create;
+                item.State = CRUDState.Create;
                 statActorRef.Tell(item);
             }
         }

@@ -23,8 +23,8 @@ namespace AkkaStats.Core.Actors
             _dbPitcherWriter = Context.ActorOf(Context.DI().Props<DbWriter<PitcherMessage>>(), "DbPitcherWriter");
             _dbPitcherReader = Context.ActorOf(Context.DI().Props<DbReader<PitcherMessage>>(), "DbPitcherReader");
 
-            Receive<PitcherMessage>(HandleAddPitcher, x => x.State == State.Create);
-            Receive<HitterMessage>(x => HandleAddHitter(x), x => x.State == State.Create);
+            Receive<PitcherMessage>(HandleAddPitcher, x => x.State == CRUDState.Create);
+            Receive<HitterMessage>(x => HandleAddHitter(x), x => x.State == CRUDState.Create);
 
             Receive<PlayerQuery>(x => HandleGetPitcherById(x), x => x.Action == "get_pitcher");
             Receive<PlayerQuery>(x => HandleGetHitterById(x), x => x.Action == "get_hitter");
@@ -81,7 +81,7 @@ namespace AkkaStats.Core.Actors
         /// </summary>
         private void HandleAddPitcher(PitcherMessage message)
         {
-            message.State = State.Read;
+            message.State = CRUDState.Read;
             Debug.WriteLine(String.Format("StatsCoordinatorActor HandleAddPitcher {0}", message.Name));
             _dbPitcherWriter.Tell(message);
         }
@@ -91,7 +91,7 @@ namespace AkkaStats.Core.Actors
         /// </summary>
         private void HandleAddHitter(HitterMessage message)
         {
-            message.State = State.Read;
+            message.State = CRUDState.Read;
             Debug.WriteLine(String.Format("StatsCoordinatorActor HandleAddHitter {0}", message.Name));
             _dbHitterWriter.Tell(message);
         }
@@ -130,6 +130,95 @@ namespace AkkaStats.Core.Actors
         {
             var dbRequest = new DbRequestMessage { Query = DbRequestType.DeleteOne, Id = obj.Id };
             _dbHitterWriter.Tell(dbRequest);
+        }
+
+    }
+
+    public class StatsCoordinatorCommandActor : AggregateCoordinator
+    {
+        public StatsCoordinatorCommandActor() : base("hitter")
+        {
+            
+        }
+
+        public override Props GetProps(Guid id)
+        {
+            return Props.Create(() => new HitterActor(id));
+        }
+
+        protected override bool Receive(object message)
+        {
+            var handled = base.Receive(message);
+            if (!handled)
+            {
+                if (message is HitterMessage)
+                {
+                    var hitterMessage = message as HitterMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        /// <summary>
+        /// Tell: Add pitcher to database
+        /// </summary>
+        private void HandleAddPitcher(PitcherMessage message)
+        {
+            message.State = CRUDState.Read;
+            Debug.WriteLine(String.Format("StatsCoordinatorActor HandleAddPitcher {0}", message.Name));
+            //_dbPitcherWriter.Tell(message);
+        }
+
+        /// <summary>
+        /// Tell: Add hitter to database
+        /// </summary>
+        private void HandleAddHitter(HitterMessage message)
+        {
+            message.State = CRUDState.Read;
+            Debug.WriteLine(String.Format("StatsCoordinatorCommandActor HandleAddHitter {0}", message.Name));
+            //_dbHitterWriter.Tell(message);
+        }
+
+        /// <summary>
+        /// Tell: Delete all the pitchers in the database
+        /// </summary>
+        private void HandleDeleteAllPitchers(PlayerQuery obj)
+        {
+            var dbRequest = new DbRequestMessage { Query = DbRequestType.DeleteMany };
+            //_dbPitcherWriter.Tell(dbRequest);
+        }
+
+        /// <summary>
+        /// Tell: Delete all the hitters in the database
+        /// </summary>
+        private void HandleDeleteAllHitters(PlayerQuery obj)
+        {
+            var dbRequest = new DbRequestMessage { Query = DbRequestType.DeleteMany };
+            //_dbHitterWriter.Tell(dbRequest);
+        }
+
+        /// <summary>
+        /// Tell: Delete a pitcher in the database
+        /// </summary>
+        private void HandleDeletePitcherById(PlayerQuery obj)
+        {
+            var dbRequest = new DbRequestMessage { Query = DbRequestType.DeleteOne, Id = obj.Id };
+            //_dbPitcherWriter.Tell(dbRequest);
+        }
+
+        /// <summary>
+        /// Tell: Delete a hitter in the database
+        /// </summary>
+        private void HandleDeleteHitterById(PlayerQuery obj)
+        {
+            var dbRequest = new DbRequestMessage { Query = DbRequestType.DeleteOne, Id = obj.Id };
+            //_dbHitterWriter.Tell(dbRequest);
         }
 
     }

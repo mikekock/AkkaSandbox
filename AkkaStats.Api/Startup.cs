@@ -44,6 +44,7 @@ namespace AkkaStats.Api
             builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().InstancePerRequest();
             builder.RegisterType<HubMessageService>().As<IHubMessageService>().SingleInstance();
             builder.RegisterType<StatsCoordinatorActor>();
+            builder.RegisterType<StatsCoordinatorCommandActor>();
             builder.RegisterType<DbReader<PitcherMessage>>();
             builder.RegisterType<DbWriter<PitcherMessage>>();
             builder.RegisterType<DbReader<HitterMessage>>();

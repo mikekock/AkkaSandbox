@@ -39,10 +39,10 @@ namespace AkkaStats.Core.Messages
         public Guid Id { get; set; }
         public string Name { get; set; }
         public string Url { get; set; }
-        public State State { get; set; }
+        public CRUDState State { get; set; }
     }
 
-    public class HitterMessage : PlayerBase, IMongoEntity
+    public class HitterMessage : PlayerBase, IMongoEntity, ICommand
     {
         public int Hrs { get; set; }
     }
