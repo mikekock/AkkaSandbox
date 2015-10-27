@@ -18,7 +18,7 @@ namespace AkkaStats.Core
             : base("hitter-" + id.ToString("N"))
         {
             _id = id;
-            //Context.Become(Active);
+            Context.Become(Active);
             //            Context.Become(Uninitialized);
         }
 
@@ -51,6 +51,17 @@ namespace AkkaStats.Core
                 //Become(Deactivated);
             }*/
             
+        }
+
+        
+        protected override void Unhandled(object message)
+        {
+            base.Unhandled(message);
+        }
+
+        protected override void OnReplayFailure(Exception ex)
+        {
+            string s = ex.Message;
         }
 
         protected override void UpdateState(IEvent domainEvent, IActorRef sender)

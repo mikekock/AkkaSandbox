@@ -11,11 +11,28 @@ using Autofac;
 using Autofac.Integration.WebApi;
 using Microsoft.Owin;
 using Owin;
+using Microsoft.Owin.Hosting;
+using System;
+using Microsoft.Owin.FileSystems;
+using Microsoft.Owin.StaticFiles;
 
 [assembly: OwinStartup(typeof(Startup))]
 
 namespace AkkaStats.Api
 {
+    class Program
+    {
+        static void Main(string[] args)
+        {
+            using (WebApp.Start<Startup>("http://localhost:8080"))
+            {
+                Console.WriteLine("Web Server is running.");
+                Console.WriteLine("Press any key to quit.");
+                Console.ReadLine();
+            }
+        }
+    }
+
     public class Startup
     {
         private BackgroundTicker _backgroundTicker;
@@ -32,6 +49,21 @@ namespace AkkaStats.Api
             app.MapSignalR();
             WebApiConfig.Register(config);
             app.UseWebApi(config);
+
+            var physicalFileSystem = new PhysicalFileSystem(@"..");
+            var options = new FileServerOptions
+            {
+                EnableDefaultFiles = true,
+                FileSystem = physicalFileSystem
+            };
+            options.StaticFileOptions.FileSystem = physicalFileSystem;
+            options.StaticFileOptions.ServeUnknownFileTypes = true;
+            options.DefaultFilesOptions.DefaultFileNames = new[]
+            {
+                "index.html"
+            };
+
+            app.UseFileServer(options);
         }
 
         public static IContainer CreateKernel()
