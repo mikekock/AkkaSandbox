@@ -18,7 +18,7 @@ namespace AkkaStats.Core
             : base("hitter-" + id.ToString("N"))
         {
             _id = id;
-            //Context.Become(Active);
+            Context.Become(Active);
             //            Context.Become(Uninitialized);
         }
 
