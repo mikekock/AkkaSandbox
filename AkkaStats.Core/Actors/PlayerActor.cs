@@ -9,6 +9,15 @@ using AkkaStats.Core.Messages;
 
 namespace AkkaStats.Core
 {
+
+    public class HomeRunHitEvent : IEvent
+    {
+        public HomeRunHitEvent()
+        {
+
+        }
+    }
+
     public class HitterActor : AggregateRoot<Hitter>
     {
         private readonly Guid _id;
@@ -66,6 +75,8 @@ namespace AkkaStats.Core
 
         protected override void UpdateState(IEvent domainEvent, IActorRef sender)
         {
+            domainEvent.Match()
+                .With<HomeRunHitEvent>(e => State.HitHomeRun());
             /*domainEvent.Match()
                 .With<AccountEvents.Withdrawal>(e => State.Balance -= e.Amount)
                 .With<AccountEvents.Deposited>(e => State.Balance += e.Amount)
@@ -100,7 +111,10 @@ namespace AkkaStats.Core
 
         private bool Active(object message)
         {
-            return base.ReceiveCommand(message) || message.Match().With<HitterMessage>(ProcessHitterMessage)
+            //return base.ReceiveCommand(message) || message.Match().With<HitterMessage>(ProcessHitterMessage)
+            return base.ReceiveCommand(message) || message.Match()
+                .With<CreateHitterMessage>(CreateHitter)
+                .With<HitHomeRunMessage>(HitHomeRun)
                 .WasHandled;
             /*return base.ReceiveCommand(message) || message.Match()
                 .With<TransactionCoordinator.BeginTransaction>(EstablishTransferTransaction)
@@ -112,17 +126,22 @@ namespace AkkaStats.Core
                 .WasHandled;*/
         }
 
-        private void ProcessHitterMessage(HitterMessage message)
+        private void CreateHitter(CreateHitterMessage message)
         {
             //if (message.State == AkkaStats.Core.Messages.CRUDState.Read) // && message.Id == _id)
             {
                 State = new Hitter(_id, message.Name);
-                for (int i = 0; i < message.Hrs; i++)
+                /*for (int i = 0; i < message.Hrs; i++)
                     State.HitHomeRun();
-                State.MoveWebsite(message.Url);
+                State.MoveWebsite(message.Url);*/
             }
         }
 
+        private void HitHomeRun(HitHomeRunMessage message)
+        {
+            //State.HitHomeRun();
+            Persist(new HomeRunHitEvent());
+        }
         /*
         private void Deactivate(AccountCommands.DeactivateAccount deactivate)
         {

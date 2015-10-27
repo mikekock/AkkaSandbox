@@ -156,6 +156,16 @@ namespace AkkaStats.Core.Actors
                     var hitterMessage = message as HitterMessage;
                     ForwardCommand(hitterMessage.Id, hitterMessage);
                 }
+                else if (message is CreateHitterMessage)
+                {
+                    var hitterMessage = message as CreateHitterMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                else if (message is HitHomeRunMessage)
+                {
+                    var hitterMessage = message as HitHomeRunMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
                 else
                 {
                     return false;

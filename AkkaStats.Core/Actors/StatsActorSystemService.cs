@@ -45,7 +45,14 @@ namespace AkkaStats.Core.Actors
             msg.State = CRUDState.Create;
             //statActorRef.Tell(msg);
 
-            statCommandActorRef.Tell(msg);
+            CreateHitterMessage hitter = new CreateHitterMessage(msg.Id, msg.Name);
+            statCommandActorRef.Tell(hitter);
+            
+            for (int i = 0; i < msg.Hrs; i++)
+            {
+                HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id);
+                statCommandActorRef.Tell(hr);
+            }
         }
 
         public async Task<PitcherMessage> GetByPitcherId(string id)

@@ -47,6 +47,28 @@ namespace AkkaStats.Core.Messages
         public int Hrs { get; set; }
     }
 
+    public class CreateHitterMessage : ICommand
+    {
+        public CreateHitterMessage(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+    }
+
+    public class HitHomeRunMessage : ICommand
+    {
+        public HitHomeRunMessage(Guid id)
+        {
+            Id = id;
+        }
+
+        public Guid Id { get; private set; }
+    }
+
     public class PitcherMessage : PlayerBase, IMongoEntity
     {
         public int Wins { get; set; }
