@@ -10,20 +10,28 @@ using AkkaStats.Core.Messages;
 
 namespace AkkaStats.Core.Actors
 {
+    public class StatsActors
+    {
+        public IActorRef statActorRef = ActorRefs.Nobody;
+        public IActorRef statCommandActorRef = ActorRefs.Nobody;
+    }
+
     public class StatsActorSystemService : IStatsActor
     {
   
-        private readonly ActorSystem StatsActorSystem;
+        //private ActorSystem StatsActorSystem;
         private readonly IActorRef statActorRef;
         private readonly IActorRef statCommandActorRef;
 
-        public StatsActorSystemService(IActorSystemFactory actorSystemFactory)
+        public StatsActorSystemService(StatsActors stats)
         {
-            StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
+            /*StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
             statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
 
-            statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");
+            statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");*/
+            statActorRef = stats.statActorRef;
+            statCommandActorRef = stats.statCommandActorRef;
         }
 
         public async Task AddPitcher(PitcherMessage msg)

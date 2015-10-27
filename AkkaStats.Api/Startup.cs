@@ -15,6 +15,9 @@ using Microsoft.Owin.Hosting;
 using System;
 using Microsoft.Owin.FileSystems;
 using Microsoft.Owin.StaticFiles;
+using Akka.Actor;
+using Akka.Routing;
+using Akka.DI.Core;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -33,6 +36,8 @@ namespace AkkaStats.Api
         }
     }
 
+    
+
     public class Startup
     {
         private BackgroundTicker _backgroundTicker;
@@ -43,6 +48,7 @@ namespace AkkaStats.Api
             var config = new HttpConfiguration();
             var container = CreateKernel();
 
+            
             _backgroundTicker = new BackgroundTicker(container.Resolve<IHubMessageService>());
 
             app.UseAutofacMiddleware(container).UseAutofacWebApi(config);
@@ -64,6 +70,13 @@ namespace AkkaStats.Api
             };
 
             app.UseFileServer(options);
+
+            ActorSystem StatsActorSystem = container.Resolve<IActorSystemFactory>().Create("StatsCoordinatorActor");
+            StatsActors stats = container.Resolve<StatsActors>();
+            stats.statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
+                .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
+            stats.statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");
+
         }
 
         public static IContainer CreateKernel()
@@ -71,10 +84,11 @@ namespace AkkaStats.Api
             var builder = new ContainerBuilder();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-
+            builder.RegisterInstance<ActorSystem>(ActorSystem.Create("StatsCoordinatorActor"));
             builder.RegisterType<StatsActorSystemService>().As<IStatsActor>().InstancePerRequest();
-            builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().InstancePerRequest();
+            builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().SingleInstance();
             builder.RegisterType<HubMessageService>().As<IHubMessageService>().SingleInstance();
+            builder.RegisterType<StatsActors>().SingleInstance();
             builder.RegisterType<StatsCoordinatorActor>();
             builder.RegisterType<StatsCoordinatorCommandActor>();
             builder.RegisterType<DbReader<PitcherMessage>>();

@@ -9,17 +9,19 @@ namespace AkkaStats.Core.Factories
     {
 
         private readonly ILifetimeScope _lifetimeScope;
+        private ActorSystem _actorSystem;
 
-        public ActorSystemFactory(ILifetimeScope lifetimeScope)
+        public ActorSystemFactory(ILifetimeScope lifetimeScope, ActorSystem System)
         {
             _lifetimeScope = lifetimeScope;
+            _actorSystem = System;
         }
 
         public ActorSystem Create(string name)
         {
-            ActorSystem statsActorSystem = ActorSystem.Create(name);
-            IDependencyResolver resolver = new AutoFacDependencyResolver(_lifetimeScope, statsActorSystem);
-            return statsActorSystem;
+            //ActorSystem statsActorSystem = ActorSystem.Create(name);
+            IDependencyResolver resolver = new AutoFacDependencyResolver(_lifetimeScope, _actorSystem);
+            return _actorSystem;
         }
 
     }
