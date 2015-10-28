@@ -18,6 +18,18 @@ namespace AkkaStats.Core
         }
     }
 
+    public class HitterAddedEvent : IEvent
+    {
+        public HitterAddedEvent(Guid id, string name)
+        {
+            Id = id;
+            Name = name;
+        }
+
+        public Guid Id { get; private set; }
+        public string Name { get; private set; }
+    }
+
     public class HitterActor : AggregateRoot<Hitter>
     {
         private readonly Guid _id;
@@ -76,6 +88,7 @@ namespace AkkaStats.Core
         protected override void UpdateState(IEvent domainEvent, IActorRef sender)
         {
             domainEvent.Match()
+                .With<HitterAddedEvent>(e => State = new Hitter(e.Id, e.Name))
                 .With<HomeRunHitEvent>(e => State.HitHomeRun());
             /*domainEvent.Match()
                 .With<AccountEvents.Withdrawal>(e => State.Balance -= e.Amount)
@@ -128,9 +141,11 @@ namespace AkkaStats.Core
 
         private void CreateHitter(CreateHitterMessage message)
         {
+            Persist(new HitterAddedEvent(message.Id, message.Name));
             //if (message.State == AkkaStats.Core.Messages.CRUDState.Read) // && message.Id == _id)
             {
-                State = new Hitter(_id, message.Name);
+
+                //State = new Hitter(_id, message.Name);
                 /*for (int i = 0; i < message.Hrs; i++)
                     State.HitHomeRun();
                 State.MoveWebsite(message.Url);*/
