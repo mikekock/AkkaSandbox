@@ -9,6 +9,7 @@ namespace AkkaStats.Core.Actors
         //Task<string> HollaBack(string msg);
         Task AddPitcher(PitcherMessage msg);
         Task AddHitter(HitterMessage msg);
+        Task AddHomeRuns(HitterMessage msg);
 
         Task<PitcherMessage> GetByPitcherId(string id);
         Task<HitterMessage> GetByHitterId(string id);

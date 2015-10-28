@@ -55,6 +55,15 @@ namespace AkkaStats.Core.Actors
             }
         }
 
+        public async Task AddHomeRuns(HitterMessage msg)
+        {
+            for (int i = 0; i < msg.Hrs; i++)
+            {
+                HitHomeRunMessage hr = new HitHomeRunMessage(new Guid("7e8f6bf21ea944d886320c2079951cd6"));
+                statCommandActorRef.Tell(hr);
+            }
+        }
+
         public async Task<PitcherMessage> GetByPitcherId(string id)
         {
             var request = PlayerQuery.Create("get_pitcher", Guid.Parse(id));

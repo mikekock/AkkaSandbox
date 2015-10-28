@@ -57,7 +57,8 @@ namespace AkkaStats.Api.Controllers
         public async Task<IHttpActionResult> Add([FromBody] HitterMessage vm)
         {
             vm.Id = Guid.NewGuid();
-            await _statsActor.AddHitter(vm);
+            //await _statsActor.AddHitter(vm);
+            await _statsActor.AddHomeRuns(vm);
             return Ok(vm);
         }
 
