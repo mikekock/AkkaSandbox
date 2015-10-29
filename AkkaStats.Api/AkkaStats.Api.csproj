@@ -60,6 +60,14 @@
       <HintPath>..\packages\Akka.Logger.Serilog.1.0.4\lib\net45\Akka.Logger.Serilog.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Akka.Persistence, Version=1.0.4.12, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.Persistence.1.0.4.12-beta\lib\net45\Akka.Persistence.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Akka.Persistence.MongoDb, Version=1.0.4.1, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Akka.Persistence.MongoDb.1.0.4.1-beta\lib\net45\Akka.Persistence.MongoDb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Autofac, Version=3.5.0.0, Culture=neutral, PublicKeyToken=17863af14b0044da, processorArchitecture=MSIL">
       <HintPath>..\packages\Autofac.3.5.2\lib\net40\Autofac.dll</HintPath>
       <Private>True</Private>
@@ -78,6 +86,14 @@
     </Reference>
     <Reference Include="Castle.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=407dd0808d44fbdc, processorArchitecture=MSIL">
       <HintPath>..\packages\Castle.Core.3.3.0\lib\net45\Castle.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.ProtocolBuffers, Version=2.4.1.521, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.521\lib\net40\Google.ProtocolBuffers.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Google.ProtocolBuffers.Serialization, Version=2.4.1.521, Culture=neutral, PublicKeyToken=55f7125234beb589, processorArchitecture=MSIL">
+      <HintPath>..\packages\Google.ProtocolBuffers.2.4.1.521\lib\net40\Google.ProtocolBuffers.Serialization.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -225,7 +241,9 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="protos\tutorial\addressbook.proto" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Controllers\StatsController.cs" />
@@ -238,9 +256,12 @@
   <ItemGroup>
     <Content Include="app.js" />
     <Content Include="baseball.jpg" />
+    <Content Include="CHANGES.txt" />
     <Content Include="favicon.ico" />
     <Content Include="httpClient.js" />
     <Content Include="index.html" />
+    <Content Include="licenses\license.txt" />
+    <Content Include="licenses\protoc-license.txt" />
     <Content Include="Scripts\jquery.signalR-2.2.0.js" />
     <Content Include="Scripts\jquery.signalR-2.2.0.min.js" />
     <Content Include="styles.css" />
@@ -264,6 +285,12 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="protos\google\protobuf\descriptor.proto" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="protos\google\protobuf\csharp_options.proto" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -92,6 +92,7 @@
     <Compile Include="Actors\PlayerActor.cs" />
     <Compile Include="AggregateCoordinator.cs" />
     <Compile Include="AggregateRoot.cs" />
+    <Compile Include="Events\PlayerEvents.cs" />
     <Compile Include="Factories\ActorSystemFactory.cs" />
     <Compile Include="Actors\StatsCoordinatorActor.cs" />
     <Compile Include="Factories\IActorSystemFactory.cs" />

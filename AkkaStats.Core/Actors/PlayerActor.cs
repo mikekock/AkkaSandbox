@@ -6,30 +6,10 @@ using System.Threading.Tasks;
 using Akka;
 using Akka.Actor;
 using AkkaStats.Core.Messages;
+using AkkaStats.Core.Events;
 
 namespace AkkaStats.Core
 {
-
-    public class HomeRunHitEvent : IEvent
-    {
-        public HomeRunHitEvent()
-        {
-
-        }
-    }
-
-    public class HitterAddedEvent : IEvent
-    {
-        public HitterAddedEvent(Guid id, string name)
-        {
-            Id = id;
-            Name = name;
-        }
-
-        public Guid Id { get; private set; }
-        public string Name { get; private set; }
-    }
-
     public class HitterActor : AggregateRoot<Hitter>
     {
         private readonly Guid _id;

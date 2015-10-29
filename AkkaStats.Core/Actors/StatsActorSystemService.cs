@@ -7,6 +7,8 @@ using Akka.DI.Core;
 using Akka.Routing;
 using AkkaStats.Core.Factories;
 using AkkaStats.Core.Messages;
+using Akka.Persistence.MongoDb;
+using MongoDB.Bson.Serialization;
 
 namespace AkkaStats.Core.Actors
 {
@@ -25,6 +27,7 @@ namespace AkkaStats.Core.Actors
 
         public StatsActorSystemService(StatsActors stats)
         {
+            
             /*StatsActorSystem = actorSystemFactory.Create("StatsCoordinatorActor");
             statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
@@ -59,7 +62,7 @@ namespace AkkaStats.Core.Actors
         {
             for (int i = 0; i < msg.Hrs; i++)
             {
-                HitHomeRunMessage hr = new HitHomeRunMessage(new Guid("7e8f6bf21ea944d886320c2079951cd6"));
+                HitHomeRunMessage hr = new HitHomeRunMessage(new Guid("9d5486e552ad4525a32fd29434049677")); // msg.Id); ////new Guid("7e8f6bf21ea944d886320c2079951cd6"));
                 statCommandActorRef.Tell(hr);
             }
         }

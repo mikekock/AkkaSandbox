@@ -18,6 +18,10 @@ using Microsoft.Owin.StaticFiles;
 using Akka.Actor;
 using Akka.Routing;
 using Akka.DI.Core;
+using Akka.Persistence.MongoDb;
+using Akka.Configuration;
+using MongoDB.Bson.Serialization;
+using AkkaStats.Core;
 
 [assembly: OwinStartup(typeof(Startup))]
 
@@ -72,11 +76,31 @@ namespace AkkaStats.Api
             app.UseFileServer(options);
 
             ActorSystem StatsActorSystem = container.Resolve<IActorSystemFactory>().Create("StatsCoordinatorActor");
+            MongoDbPersistence.Instance.Apply(StatsActorSystem);
+            BsonClassMap.RegisterClassMap<CreateHitterMessage>(cm =>
+            {
+                cm.AutoMap();
+            });
+            BsonClassMap.RegisterClassMap<HitHomeRunMessage>(cm =>
+            {
+                cm.AutoMap();
+            });
+
+            BsonClassMap.RegisterClassMap<HomeRunHitEvent>(cm =>
+            {
+                cm.AutoMap();
+            });
+            BsonClassMap.RegisterClassMap<HitterAddedEvent>(cm =>
+            {
+                cm.AutoMap();
+            });
+
+
             StatsActors stats = container.Resolve<StatsActors>();
             stats.statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
             stats.statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");
-
+            
         }
 
         public static IContainer CreateKernel()
@@ -84,7 +108,7 @@ namespace AkkaStats.Api
             var builder = new ContainerBuilder();
 
             builder.RegisterApiControllers(Assembly.GetExecutingAssembly());
-            builder.RegisterInstance<ActorSystem>(ActorSystem.Create("StatsCoordinatorActor"));
+            builder.RegisterInstance<ActorSystem>(ActorSystem.Create("StatsCoordinatorActor", ConfigurationFactory.Load()));
             builder.RegisterType<StatsActorSystemService>().As<IStatsActor>().InstancePerRequest();
             builder.RegisterType<ActorSystemFactory>().As<IActorSystemFactory>().SingleInstance();
             builder.RegisterType<HubMessageService>().As<IHubMessageService>().SingleInstance();
