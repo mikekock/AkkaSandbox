@@ -22,6 +22,7 @@ using Akka.Persistence.MongoDb;
 using Akka.Configuration;
 using MongoDB.Bson.Serialization;
 using AkkaStats.Core;
+using AkkaStats.Core.Events;
 
 [assembly: OwinStartup(typeof(Startup))]
 
