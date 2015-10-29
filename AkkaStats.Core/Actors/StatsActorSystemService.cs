@@ -46,7 +46,7 @@ namespace AkkaStats.Core.Actors
         public async Task AddHitter(HitterMessage msg)
         {
             msg.State = CRUDState.Create;
-            //statActorRef.Tell(msg);
+            statActorRef.Tell(msg);
 
             CreateHitterMessage hitter = new CreateHitterMessage(msg.Id, msg.Name);
             statCommandActorRef.Tell(hitter);
@@ -62,7 +62,7 @@ namespace AkkaStats.Core.Actors
         {
             for (int i = 0; i < msg.Hrs; i++)
             {
-                HitHomeRunMessage hr = new HitHomeRunMessage(new Guid("9d5486e552ad4525a32fd29434049677")); // msg.Id); ////new Guid("7e8f6bf21ea944d886320c2079951cd6"));
+                HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id); ////new Guid("7e8f6bf21ea944d886320c2079951cd6"));
                 statCommandActorRef.Tell(hr);
             }
         }
