@@ -232,4 +232,52 @@ namespace AkkaStats.Core.Actors
         }
 
     }
+
+    public class StatsCoordinatorViewActor : AggregateCoordinator
+    {
+        public StatsCoordinatorViewActor() : base("hitter-view")
+        {
+
+        }
+
+        public override Props GetProps(Guid id)
+        {
+            return Props.Create(() => new HitterHomeRunView(id));
+        }
+
+        protected override bool Receive(object message)
+        {
+            var handled = base.Receive(message);
+            if (!handled)
+            {
+                if (message is HitterHomeRunView.GetLastHomeRunInsertedDateTime)
+                {
+                    var hitterMessage = message as HitterHomeRunView.GetLastHomeRunInsertedDateTime;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                /*if (message is HitterMessage)
+                {
+                    var hitterMessage = message as HitterMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                else if (message is CreateHitterMessage)
+                {
+                    var hitterMessage = message as CreateHitterMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                else if (message is HitHomeRunMessage)
+                {
+                    var hitterMessage = message as HitHomeRunMessage;
+                    ForwardCommand(hitterMessage.Id, hitterMessage);
+                }
+                else*/
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+    }
 }

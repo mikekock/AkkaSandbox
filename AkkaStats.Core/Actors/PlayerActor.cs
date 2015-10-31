@@ -7,6 +7,7 @@ using Akka;
 using Akka.Actor;
 using AkkaStats.Core.Messages;
 using AkkaStats.Core.Events;
+using Akka.Persistence;
 
 namespace AkkaStats.Core
 {
@@ -267,4 +268,66 @@ namespace AkkaStats.Core
         //        .WasHandled;
         //}
     }
+
+
+    public class HitterHomeRunView : PersistentView
+    {
+        #region messages
+
+        
+        public sealed class GetLastHomeRunInsertedDateTime : ICommand
+        {
+            public GetLastHomeRunInsertedDateTime(Guid id)
+            {
+                Id = id;
+            }
+
+            public Guid Id { get; private set; }
+        }
+
+        #endregion
+
+        private readonly Guid _id;
+
+        // you would probably like to record this directly in database
+        protected DateTime LastHomeRunInsertedDateTime = new DateTime(1980, 1, 1);
+
+        public HitterHomeRunView(Guid id)
+        {
+            _id = id;
+            
+        }
+
+        /// <summary>
+        /// View id is unique identifier of current view. It's used i.e. for persistent view state snapshotting.
+        /// </summary>
+        public override string ViewId { get { return "hitter-view-" + _id.ToString("N"); } }
+
+        /// <summary>
+        /// Persistence id is used to identify aggregate root (<see cref="Account"/> instance in 
+        /// this case) which will be used as an event source for current persistent view.
+        /// </summary>
+        public override string PersistenceId { get { return "hitter-" + _id.ToString("N"); } }
+
+        protected override bool Receive(object message)
+        {
+            return message.Match()
+                /*.With<GetHistoryPage>(page =>
+                {
+                    Sender.Tell(History.Skip(page.Skip).Take(page.Take).ToArray(), Self);
+                })*/
+                .With<HomeRunHitEvent>(e =>
+                {
+                    LastHomeRunInsertedDateTime = DateTime.Now;
+                    //RecordWithdrawal(e.FromId, e.Amount, e.Timestamp);
+                })
+                .With<GetLastHomeRunInsertedDateTime>(e =>
+                {
+                    Sender.Tell(LastHomeRunInsertedDateTime, Self);
+                })
+                .WasHandled;
+        }
+    }
+
+
 }

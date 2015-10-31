@@ -16,6 +16,7 @@ namespace AkkaStats.Core.Actors
     {
         public IActorRef statActorRef = ActorRefs.Nobody;
         public IActorRef statCommandActorRef = ActorRefs.Nobody;
+        public IActorRef statViewActorRef = ActorRefs.Nobody; 
     }
 
     public class StatsActorSystemService : IStatsActor
@@ -24,6 +25,7 @@ namespace AkkaStats.Core.Actors
         //private ActorSystem StatsActorSystem;
         private readonly IActorRef statActorRef;
         private readonly IActorRef statCommandActorRef;
+        private readonly IActorRef statViewActorRef;
 
         public StatsActorSystemService(StatsActors stats)
         {
@@ -35,6 +37,8 @@ namespace AkkaStats.Core.Actors
             statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");*/
             statActorRef = stats.statActorRef;
             statCommandActorRef = stats.statCommandActorRef;
+            statViewActorRef = stats.statViewActorRef;
+
         }
 
         public async Task AddPitcher(PitcherMessage msg)
@@ -56,6 +60,10 @@ namespace AkkaStats.Core.Actors
                 HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id);
                 statCommandActorRef.Tell(hr);
             }
+
+            //var dttm = await statViewActorRef.Ask(new HitterHomeRunView.GetLastHomeRunInsertedDateTime(msg.Id));
+            //var d = dttm;
+            
         }
 
         public async Task AddHomeRuns(HitterMessage msg)
@@ -65,6 +73,8 @@ namespace AkkaStats.Core.Actors
                 HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id); ////new Guid("7e8f6bf21ea944d886320c2079951cd6"));
                 statCommandActorRef.Tell(hr);
             }
+
+            statViewActorRef.Tell(new HitterHomeRunView.GetLastHomeRunInsertedDateTime(msg.Id));
         }
 
         public async Task<PitcherMessage> GetByPitcherId(string id)

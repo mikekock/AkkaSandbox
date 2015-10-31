@@ -101,7 +101,8 @@ namespace AkkaStats.Api
             stats.statActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorActor>()
                 .WithRouter(new RoundRobinPool(2)), "StatsCoordinatorActor");
             stats.statCommandActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorCommandActor>(), "StatsCoordinatorCommandActor");
-            
+            stats.statViewActorRef = StatsActorSystem.ActorOf(StatsActorSystem.DI().Props<StatsCoordinatorViewActor>(), "StatsCoordinatorViewActor");
+
         }
 
         public static IContainer CreateKernel()
@@ -116,6 +117,7 @@ namespace AkkaStats.Api
             builder.RegisterType<StatsActors>().SingleInstance();
             builder.RegisterType<StatsCoordinatorActor>();
             builder.RegisterType<StatsCoordinatorCommandActor>();
+            builder.RegisterType<StatsCoordinatorViewActor>();
             builder.RegisterType<DbReader<PitcherMessage>>();
             builder.RegisterType<DbWriter<PitcherMessage>>();
             builder.RegisterType<DbReader<HitterMessage>>();
