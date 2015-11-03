@@ -308,6 +308,7 @@ namespace AkkaStats.Core
         /// this case) which will be used as an event source for current persistent view.
         /// </summary>
         public override string PersistenceId { get { return "hitter-" + _id.ToString("N"); } }
+        private int HomeRunCount = 0;
 
         protected override bool Receive(object message)
         {
@@ -316,9 +317,14 @@ namespace AkkaStats.Core
                 {
                     Sender.Tell(History.Skip(page.Skip).Take(page.Take).ToArray(), Self);
                 })*/
+                .With<HitterAddedEvent>(e =>
+                {
+                    HomeRunCount = 0;
+                })
                 .With<HomeRunHitEvent>(e =>
                 {
                     LastHomeRunInsertedDateTime = DateTime.Now;
+                    ++HomeRunCount;
                     //RecordWithdrawal(e.FromId, e.Amount, e.Timestamp);
                 })
                 .With<GetLastHomeRunInsertedDateTime>(e =>

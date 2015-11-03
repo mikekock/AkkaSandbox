@@ -55,11 +55,11 @@ namespace AkkaStats.Core.Actors
             CreateHitterMessage hitter = new CreateHitterMessage(msg.Id, msg.Name);
             statCommandActorRef.Tell(hitter);
             
-            for (int i = 0; i < msg.Hrs; i++)
+            /*for (int i = 0; i < msg.Hrs; i++)
             {
                 HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id);
                 statCommandActorRef.Tell(hr);
-            }
+            }*/
 
             //var dttm = await statViewActorRef.Ask(new HitterHomeRunView.GetLastHomeRunInsertedDateTime(msg.Id));
             //var d = dttm;
@@ -73,8 +73,8 @@ namespace AkkaStats.Core.Actors
                 HitHomeRunMessage hr = new HitHomeRunMessage(msg.Id); ////new Guid("7e8f6bf21ea944d886320c2079951cd6"));
                 statCommandActorRef.Tell(hr);
             }
-
-            statViewActorRef.Tell(new HitterHomeRunView.GetLastHomeRunInsertedDateTime(msg.Id));
+            await Task.Delay(1000);
+            var dttm = await statViewActorRef.Ask(new HitterHomeRunView.GetLastHomeRunInsertedDateTime(msg.Id));
         }
 
         public async Task<PitcherMessage> GetByPitcherId(string id)
